@@ -30,7 +30,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/spf13/viper/internal/testutil"
+	"github.com/Valdenirmezadri/viper/internal/testutil"
 )
 
 var yamlExample = []byte(`Hacker: true
@@ -142,27 +142,27 @@ func initConfigs() {
 	var r io.Reader
 	SetConfigType("yaml")
 	r = bytes.NewReader(yamlExample)
-	unmarshalReader(r, v.config)
+	unmarshalReader(r, v.config())
 
 	SetConfigType("json")
 	r = bytes.NewReader(jsonExample)
-	unmarshalReader(r, v.config)
+	unmarshalReader(r, v.config())
 
 	SetConfigType("hcl")
 	r = bytes.NewReader(hclExample)
-	unmarshalReader(r, v.config)
+	unmarshalReader(r, v.config())
 
 	SetConfigType("properties")
 	r = bytes.NewReader(propertiesExample)
-	unmarshalReader(r, v.config)
+	unmarshalReader(r, v.config())
 
 	SetConfigType("toml")
 	r = bytes.NewReader(tomlExample)
-	unmarshalReader(r, v.config)
+	unmarshalReader(r, v.config())
 
 	SetConfigType("env")
 	r = bytes.NewReader(dotenvExample)
-	unmarshalReader(r, v.config)
+	unmarshalReader(r, v.config())
 
 	SetConfigType("json")
 	remote := bytes.NewReader(remoteExample)
@@ -170,7 +170,7 @@ func initConfigs() {
 
 	SetConfigType("ini")
 	r = bytes.NewReader(iniExample)
-	unmarshalReader(r, v.config)
+	unmarshalReader(r, v.config())
 }
 
 func initConfig(typ, config string) {
@@ -178,7 +178,7 @@ func initConfig(typ, config string) {
 	SetConfigType(typ)
 	r := strings.NewReader(config)
 
-	if err := unmarshalReader(r, v.config); err != nil {
+	if err := unmarshalReader(r, v.config()); err != nil {
 		panic(err)
 	}
 }
@@ -192,7 +192,7 @@ func initJSON() {
 	SetConfigType("json")
 	r := bytes.NewReader(jsonExample)
 
-	unmarshalReader(r, v.config)
+	unmarshalReader(r, v.config())
 }
 
 func initProperties() {
@@ -200,7 +200,7 @@ func initProperties() {
 	SetConfigType("properties")
 	r := bytes.NewReader(propertiesExample)
 
-	unmarshalReader(r, v.config)
+	unmarshalReader(r, v.config())
 }
 
 func initTOML() {
@@ -208,7 +208,7 @@ func initTOML() {
 	SetConfigType("toml")
 	r := bytes.NewReader(tomlExample)
 
-	unmarshalReader(r, v.config)
+	unmarshalReader(r, v.config())
 }
 
 func initDotEnv() {
@@ -216,7 +216,7 @@ func initDotEnv() {
 	SetConfigType("env")
 	r := bytes.NewReader(dotenvExample)
 
-	unmarshalReader(r, v.config)
+	unmarshalReader(r, v.config())
 }
 
 func initHcl() {
@@ -224,7 +224,7 @@ func initHcl() {
 	SetConfigType("hcl")
 	r := bytes.NewReader(hclExample)
 
-	unmarshalReader(r, v.config)
+	unmarshalReader(r, v.config())
 }
 
 func initIni() {
@@ -232,7 +232,7 @@ func initIni() {
 	SetConfigType("ini")
 	r := bytes.NewReader(iniExample)
 
-	unmarshalReader(r, v.config)
+	unmarshalReader(r, v.config())
 }
 
 // make directories for testing
@@ -380,7 +380,7 @@ func TestUnmarshaling(t *testing.T) {
 	SetConfigType("yaml")
 	r := bytes.NewReader(yamlExample)
 
-	unmarshalReader(r, v.config)
+	unmarshalReader(r, v.config())
 	assert.True(t, InConfig("name"))
 	assert.False(t, InConfig("state"))
 	assert.Equal(t, "steve", Get("name"))
@@ -1937,7 +1937,7 @@ func TestDotParameter(t *testing.T) {
 	initJSON()
 	// shoud take precedence over batters defined in jsonExample
 	r := bytes.NewReader([]byte(`{ "batters.batter": [ { "type": "Small" } ] }`))
-	unmarshalReader(r, v.config)
+	unmarshalReader(r, v.config())
 
 	actual := Get("batters.batter")
 	expected := []interface{}{map[string]interface{}{"type": "Small"}}
@@ -2238,7 +2238,7 @@ func TestKeyDelimiter(t *testing.T) {
 	v.SetConfigType("yaml")
 	r := strings.NewReader(string(yamlExampleWithDot))
 
-	err := v.unmarshalReader(r, v.config)
+	err := v.unmarshalReader(r, v.config())
 	require.NoError(t, err)
 
 	values := map[string]interface{}{
@@ -2308,7 +2308,7 @@ func TestSliceIndexAccess(t *testing.T) {
 	v.SetConfigType("yaml")
 	r := strings.NewReader(string(yamlDeepNestedSlices))
 
-	err := v.unmarshalReader(r, v.config)
+	err := v.unmarshalReader(r, v.config())
 	require.NoError(t, err)
 
 	assert.Equal(t, "The expanse", v.GetString("tv.0.title"))
